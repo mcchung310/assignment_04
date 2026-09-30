@@ -91,13 +91,21 @@ def generate_timesheet(seed: int, payroll_date: str = "2026-10-23") -> pd.DataFr
     roster_ids = [f"E{n:03d}" for n in range(1, 13)]
     worked = sorted(rng.sample(roster_ids, rng.randint(8, 12)))
     rows = [
-        {"payroll_date": payroll_date, "employee_id": eid,
-         "hours": _format_hours(rng, rng.choice(_HOUR_STYLES))}
+        {
+            "payroll_date": payroll_date,
+            "employee_id": eid,
+            "hours": _format_hours(rng, rng.choice(_HOUR_STYLES)),
+        }
         for eid in worked
     ]
     if rng.random() < 0.5:
-        rows.append({"payroll_date": payroll_date, "employee_id": f"E{rng.randint(90, 99)}",
-                     "hours": _format_hours(rng, "h_m")})
+        rows.append(
+            {
+                "payroll_date": payroll_date,
+                "employee_id": f"E{rng.randint(90, 99)}",
+                "hours": _format_hours(rng, "h_m"),
+            }
+        )
     return pd.DataFrame(rows, dtype=str)
 
 

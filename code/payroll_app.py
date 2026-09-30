@@ -43,10 +43,14 @@ import streamlit as st
 from payroll import build_payroll, load_employees, load_timesheet, payroll_export
 
 st.title("Salt City Coffee — Weekly Payroll")
-st.write("Upload this weeks timesheet export. The roster is loaded automatically. Check the totals, fix anything flagged, and then download the file for the payroll provider.")
+st.write(
+    "Upload this week's timesheet export. The roster is loaded automatically. "
+    "Check the totals, fix anything flagged, and then download the file for "
+    "the payroll provider."
+)
 
 roster = load_employees()
-upload = st.file_uploader("Timesheet CSV", type = "csv", key="timesheet")
+upload = st.file_uploader("Timesheet CSV", type="csv", key="timesheet")
 
 if upload is not None:
     timesheet = load_timesheet(upload)
@@ -68,13 +72,17 @@ if upload is not None:
     if len(unmatched) > 0:
         ids = ", ".join(unmatched["employee_id"])
         st.warning(
-            f"{len(unmatched)} timesheet row(s) have an employee_id that is not on the roster: {ids}. They are NOT in the export - add them to HR's roster and reupload."
+            f"{len(unmatched)} timesheet row(s) have an employee_id that is "
+            f"not on the roster: {ids}. They are NOT in the export. "
+            "Add them to HR's roster and re-upload."
         )
     else:
         st.success("Every employee_id matched the roster.")
-    
+
     st.subheader("Payroll Table")
-    st.write("Raw values on left, computed columns on right. Nothing is overwritten.")
+    st.write(
+        "Raw values on the left, computed columns on the right. Nothing is overwritten."
+    )
     st.dataframe(payroll)
 
     st.download_button(

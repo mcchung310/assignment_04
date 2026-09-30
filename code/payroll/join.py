@@ -46,4 +46,3 @@ def merge_employees(timesheet: pd.DataFrame, employees: pd.DataFrame) -> pd.Data
     "keep the timesheet's side" — pick whichever reads best to you.)
     """
     return pd.merge(timesheet, employees, on="employee_id", how="left")
-

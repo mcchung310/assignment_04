@@ -16,7 +16,7 @@ import pandas as pd
 from .clean import add_hourly_rate, add_hours_worked
 from .join import merge_employees
 
-OVERTIME_THRESHOLD = 40.0   # weekly hours above this are paid at time-and-a-half
+OVERTIME_THRESHOLD = 40.0  # weekly hours above this are paid at time-and-a-half
 OVERTIME_MULTIPLIER = 1.5
 
 
@@ -68,7 +68,8 @@ def add_gross_pay(payroll: pd.DataFrame) -> pd.DataFrame:
     """
     out = payroll.copy()
     out["gross_pay"] = out.apply(
-        lambda row: calc_gross_pay(row["hours_worked"], row ["hourly_rate_usd"]), axis =1,
+        lambda row: calc_gross_pay(row["hours_worked"], row["hourly_rate_usd"]),
+        axis=1,
     )
     return out
 
@@ -77,10 +78,9 @@ def add_pay_type(payroll: pd.DataFrame) -> pd.DataFrame:
     """Return a copy with one new column, `pay_type`: `classify_pay` for every row."""
     out = payroll.copy()
     out["pay_type"] = out.apply(
-        lambda row: classify_pay(row["hours_worked"], row["hourly_rate_usd"]),
-        axis = 1
+        lambda row: classify_pay(row["hours_worked"], row["hourly_rate_usd"]), axis=1
     )
-    return out 
+    return out
 
 
 def build_payroll(timesheet: pd.DataFrame, employees: pd.DataFrame) -> pd.DataFrame:
@@ -114,10 +114,12 @@ def payroll_export(payroll: pd.DataFrame) -> pd.DataFrame:
     view of it shaped for someone else's system.
     """
     payable = payroll[payroll["pay_type"] != "unmatched"]
-    return pd.DataFrame({
-        "payrolldate": payable["payroll_date"],
-        "employeeid": payable["employee_id"],
-        "hours": payable["hours_worked"],
-        "rate": payable["hourly_rate_usd"],
-        "total": payable["gross_pay"],
-    })
+    return pd.DataFrame(
+        {
+            "payrolldate": payable["payroll_date"],
+            "employeeid": payable["employee_id"],
+            "hours": payable["hours_worked"],
+            "rate": payable["hourly_rate_usd"],
+            "total": payable["gross_pay"],
+        }
+    )

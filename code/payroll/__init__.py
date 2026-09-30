@@ -30,18 +30,18 @@ from .extract import generate_timesheet, load_employees, load_timesheet
 from .join import merge_employees
 
 __all__ = [
-    "load_employees",
-    "load_timesheet",
-    "generate_timesheet",
-    "parse_hours",
-    "clean_currency",
-    "add_hours_worked",
-    "add_hourly_rate",
-    "merge_employees",
-    "calc_gross_pay",
-    "classify_pay",
     "add_gross_pay",
+    "add_hourly_rate",
+    "add_hours_worked",
     "add_pay_type",
     "build_payroll",
+    "calc_gross_pay",
+    "classify_pay",
+    "clean_currency",
+    "generate_timesheet",
+    "load_employees",
+    "load_timesheet",
+    "merge_employees",
+    "parse_hours",
     "payroll_export",
 ]
