@@ -22,7 +22,7 @@ import pandas as pd
 
 
 def parse_hours(value) -> float:
-    """Read a weekly-hours string the way a shift lead typed it; return hours as a float.
+    """Read a weekly-hours string the way a shift lead typed it; return a float.
 
     Examples:
 
