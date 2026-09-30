@@ -4,3 +4,25 @@ See reflection.md for what makes a good reflection — be specific, use the
 terminology from this assignment (lineage, grain, element function, Series.apply,
 row apply / axis=1, left merge, NaN, coerce, copy-add-return, boolean index,
 export), and make it actionable.
+
+This assignment we learned how lineage works as a pipeline step taht adds columns,
+never overwritting values or dropping/renaming columns or changing the frame.
+We used this in every file - first in clean.py with the functions add_hours_worked
+and add_hourly_rate so that the table showed "40h 15min" under hours and then
+also showed "40.25" under hours_worked (same for the hourly rates). In join.py,
+pd.merge and "how = 'left'" kept all the timesheet's columns and rows and 
+then added the rosters - this was fun because it reminded me a lot of the database
+SQL class I took where we worked a lot on merges. Lineage was important for this assignment
+becuase every number is still in its row so any human can go back and check it by just looking
+at it without having to do any code. 
+
+This also was important because I originally had add_hourly_rate calling parse_hours instead
+of clean_currency so every rate with a "$" in it became 0.0 without rasing any errors. I could
+trace it because the raw hourly_rate text ("$20.00") was still right next to the 0.0 for the 
+new hourly_rate_usd so I could see exactly where it went wrong - if the pipeline ahd overwritten
+the column, that would've been much harder to see. 
+
+What confused me a bit was that I kept forgetting to put axis=1 because I didn't really 
+understand the function of it but realized that it was what was telling to go one 
+row at a time instead of column. Next assignment, I would like to be able to write 
+my own tests (ex. if __name__ == "__main__":) to be able to quickly test if my code worked in the terminal. 
