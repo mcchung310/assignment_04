@@ -43,4 +43,47 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 
-st.title("")
+from payroll import build_payroll, load_employees, load_timesheet, payroll_export
+
+st.title("Salt City Coffee — Weekly Payroll")
+st.write("Upload this weeks timesheet export. The roster is loaded automatically. Check the totals, fix anything flagged, and then download the file for the payroll provider.")
+
+roster = load_employees()
+upload = st.file_uploader("Timesheet CSV", type = "csv", key="timesheet")
+
+if upload is not None:
+    timesheet = load_timesheet(upload)
+    payroll = build_payroll(timesheet, roster)
+    payroll_date = payroll["payroll_date"].iloc[0]
+    st.subheader(f"Pay Period Ending {payroll_date}")
+
+    unmatched = payroll[payroll["pay_type"] == "unmatched"]
+    overtime = payroll[payroll["pay_type"] == "overtime"]
+    total_hours = payroll["hours_worked"].sum()
+    total_pay = payroll["gross_pay"].sum()
+
+    col1, col2, col3, col4 = st.columns(4)
+    col1.metric("Employees paid", len(payroll) - len(unmatched))
+    col2.metric("Total hours", f"{total_hours:,.2f}")
+    col3.metric("Total gross pay", f"${total_pay:,.2f}")
+    col4.metric("Overtime weeks", len(overtime))
+
+    if len(unmatched) > 0:
+        ids = ", ".join(unmatched["employee_id"])
+        st.warning(
+            f"{len(unmatched)} timesheet row(s) have an employee_id that is not on the roster: {ids}. They are NOT in the export - add them to HR's roster and reupload."
+        )
+    else:
+        st.success("Every employee_id matched the roster.")
+    
+    st.subheader("Payroll Table")
+    st.write("Raw values on left, computed columns on right. Nothing is overwritten.")
+    st.dataframe(payroll)
+
+    st.download_button(
+        "Download payroll CSV for the provider",
+        data=payroll_export(payroll).to_csv(index=False),
+        file_name=f"payroll_{payroll_date}.csv",
+        mime="text/csv",
+        key="download",
+    )
